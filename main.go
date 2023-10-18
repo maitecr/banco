@@ -29,6 +29,17 @@ func (c *ContaCorrente) Depositar(valorDeposito float64) (string, float64) {
 	}
 }
 
+func (c *ContaCorrente) Transferir(valorTransferencia float64, contaDestino *ContaCorrente) bool {
+	if valorTransferencia < c.saldo && valorTransferencia > 0 {
+		c.saldo -= valorTransferencia
+		contaDestino.Depositar(valorTransferencia)
+
+		return true
+	} else {
+		return false
+	}
+}
+
 func main() {
 
 	conta01 := ContaCorrente{
@@ -45,7 +56,7 @@ func main() {
 	}
 	fmt.Println(conta02)
 
-	fmt.Println(conta01 == conta02) //mesmo que os endereços sejam diferentes, o go consegue identificar o conteúdo do objeto
+	//fmt.Println(conta01 == conta02) //mesmo que os endereços sejam diferentes, o go consegue identificar o conteúdo do objeto
 
 	//conta02 := ContaCorrente{"Marisa", 123, 02, 100.40} //usar para ter todos os campos preenchidos
 	//fmt.Println(conta02)
@@ -53,29 +64,34 @@ func main() {
 	var conta03 *ContaCorrente //ponteiro para a struct ContaCorrente,o print retornará com um &
 	conta03 = new(ContaCorrente)
 	conta03.titular = "Aristoteles"
-	fmt.Println(&conta03) //usar o * para obter o conteúdo que há no ponteiro/endereço de memória
+	//fmt.Println(&conta03) //usar o * para obter o conteúdo que há no ponteiro/endereço de memória
 
 	var conta04 *ContaCorrente
 	conta04 = new(ContaCorrente)
 	conta04.titular = "Aristoteles"
-	fmt.Println(&conta04) //usar o * para obter o conteúdo que há no ponteiro/endereço de memória
+	conta04.saldo = 400
+	//fmt.Println(&conta04) //usar o * para obter o conteúdo que há no ponteiro/endereço de memória
 
-	fmt.Println(conta03 == conta04) //endereços diferentes = false
+	//fmt.Println(conta03 == conta04) //endereços diferentes = false
 
 	fmt.Println("===============================================================================================")
 
-	conta05 := ContaCorrente{}
-	conta05.titular = "Penelope"
-	conta05.saldo = 500
+	conta05 := ContaCorrente{titular: "Penelope", saldo: 500}
 	fmt.Println(conta05)
 
-	status, valor := conta05.Depositar(2000)
-	fmt.Println(status, valor)
+	conta06 := ContaCorrente{titular: "Penelope", saldo: 500}
 
-	fmt.Println(conta05.Sacar(-100))
-	fmt.Println(conta05.saldo)
+	//status, valor := conta05.Depositar(2000)
+	//fmt.Println(status, valor)
 
-	fmt.Println(conta05.Depositar(400))
-	fmt.Println(conta05.saldo)
+	//fmt.Println(conta05.Sacar(-100))
+	//fmt.Println(conta05.saldo)
+	//fmt.Println(conta05.Depositar(400))
+	//fmt.Println(conta05.saldo)
 
+	status := conta05.Transferir(100, &conta06)
+
+	fmt.Println(status)
+	fmt.Println(conta05)
+	fmt.Println(conta06)
 }
