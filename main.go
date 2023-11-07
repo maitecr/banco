@@ -1,63 +1,37 @@
 package main
 
 import (
-	"fmt"
-
+	clientes "banco/cliente"
 	contas "banco/conta"
+	"fmt"
 )
+
+func PagarBoleto(conta verificarConta, valorBoleto float64) {
+	conta.Sacar(valorBoleto)
+}
+
+type verificarConta interface {
+	Sacar(valor float64) string
+}
 
 func main() {
 
+	cliente01 := clientes.Titular{"Pafuncio", "123343", "dev"}
+
 	conta01 := contas.ContaCorrente{
-		Titular:       "Pafuncio",
+		Titular:       cliente01,
 		NumeroAgencia: 123,
-		NumeroConta:   01,
+		NumeroConta:   234,
 	}
-	fmt.Println(conta01)
 
-	conta02 := contas.ContaCorrente{
-		Titular:       "Pafuncio",
-		NumeroAgencia: 123,
-		NumeroConta:   01,
-	}
-	fmt.Println(conta02)
+	fmt.Println(conta01.Depositar(100))
+	PagarBoleto(&conta01, 39)
+	fmt.Println(conta01.GetSaldo())
 
-	//fmt.Println(conta01 == conta02) //mesmo que os endereços sejam diferentes, o go consegue identificar o conteúdo do objeto
-
-	//conta02 := ContaCorrente{"Marisa", 123, 02, 100.40} //usar para ter todos os campos preenchidos
+	conta02 := contas.ContaPoupanca{}
+	conta02.Depositar(300)
 	//fmt.Println(conta02)
+	PagarBoleto(&conta02, 7)
+	fmt.Println(conta02.GetSaldo())
 
-	var conta03 *contas.ContaCorrente //ponteiro para a struct ContaCorrente,o print retornará com um &
-	conta03 = new(contas.ContaCorrente)
-	conta03.Titular = "Aristoteles"
-	//fmt.Println(&conta03) //usar o * para obter o conteúdo que há no ponteiro/endereço de memória
-
-	var conta04 *contas.ContaCorrente
-	conta04 = new(contas.ContaCorrente)
-	conta04.Titular = "Aristoteles"
-	conta04.Saldo = 400
-	//fmt.Println(&conta04) //usar o * para obter o conteúdo que há no ponteiro/endereço de memória
-
-	//fmt.Println(conta03 == conta04) //endereços diferentes = false
-
-	fmt.Println("===============================================================================================")
-
-	conta05 := contas.ContaCorrente{Titular: "Penelope", Saldo: 500}
-	fmt.Println(conta05)
-
-	conta06 := contas.ContaCorrente{Titular: "Penelope", Saldo: 500}
-
-	//status, valor := conta05.Depositar(2000)
-	//fmt.Println(status, valor)
-
-	//fmt.Println(conta05.Sacar(-100))
-	//fmt.Println(conta05.saldo)
-	//fmt.Println(conta05.Depositar(400))
-	//fmt.Println(conta05.saldo)
-
-	status := conta05.Transferir(100, &conta06)
-
-	fmt.Println(status)
-	fmt.Println(conta05)
-	fmt.Println(conta06)
 }
